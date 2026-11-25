@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Testing / tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+__pycache__/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Local OCR model downloads (EasyOCR)
+~/.EasyOCR/
+*.pth
+
+# Experiment outputs (keep folder structure via .gitkeep)
+results/metrics/*.csv
+results/graphs/*.png
+!results/metrics/.gitkeep
+!results/graphs/.gitkeep
+
+# Dataset images may contain personal packaging photos — do not commit them
+dataset/images/*
+!dataset/images/.gitkeep
+
+# Secrets / local notes
+.env
+*.log

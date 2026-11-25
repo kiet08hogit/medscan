@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" data-theme="luxury">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MedScan — project overview</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/daisyui.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/themes.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.2.4/dist/index.global.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :where(.grid, .flex) > * { min-width: 0; }
+    :where(p, h1, h2, h3, li, td, th) { overflow-wrap: anywhere; }
+    svg { max-width: 100%; height: auto; }
+  </style>
+</head>
+<body class="bg-base-200 text-base-content min-h-screen">
+  <main class="max-w-5xl mx-auto p-6 space-y-8">
+    <header class="space-y-2">
+      <p class="text-sm uppercase tracking-wide opacity-70">CS 415 · Computer Vision</p>
+      <h1 class="text-3xl font-bold">MedScan is ready to run locally</h1>
+      <p class="text-lg opacity-90">
+        A working OpenCV + OCR research project that compares preprocessing methods
+        on medication packaging images, then looks up confirmed names in openFDA.
+      </p>
+    </header>
+
+    <section class="alert alert-info" id="claim-verified">
+      <div>
+        <h2 class="font-semibold">Verified in this environment</h2>
+        <ul class="list-disc ml-5 mt-1 text-sm">
+          <li>16/16 unit tests passed (<code>pytest -q</code>)</li>
+          <li>Tesseract OCR smoke test read synthetic text <code>Ibuprofen 200 mg</code></li>
+          <li>openFDA returned a real ibuprofen label</li>
+          <li><code>evaluation.py</code> correctly refuses to invent metrics when no dataset images exist</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card bg-base-100 shadow" id="pipeline">
+      <div class="card-body">
+        <h2 class="card-title">How the pipeline works</h2>
+        <p class="text-sm opacity-80">Question this diagram answers: what happens from image to FDA fields?</p>
+        <svg viewBox="0 0 900 160" width="100%" role="img" aria-label="MedScan pipeline flow">
+          <title>MedScan pipeline</title>
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+            </marker>
+          </defs>
+          <g fill="var(--color-base-200)" stroke="currentColor" stroke-width="1.5">
+            <rect id="node-input" x="10" y="40" width="120" height="70" rx="10"><title>Input</title></rect>
+            <rect id="node-cv" x="170" y="40" width="140" height="70" rx="10"><title>Preprocessing</title></rect>
+            <rect id="node-ocr" x="350" y="40" width="120" height="70" rx="10"><title>OCR</title></rect>
+            <rect id="node-match" x="510" y="40" width="140" height="70" rx="10"><title>Fuzzy match</title></rect>
+            <rect id="node-fda" x="690" y="40" width="180" height="70" rx="10"><title>openFDA lookup</title></rect>
+          </g>
+          <g fill="currentColor" font-size="13" text-anchor="middle">
+            <text x="70" y="80">Image in</text>
+            <text x="240" y="80">OpenCV CV</text>
+            <text x="410" y="80">OCR text</text>
+            <text x="580" y="80">Candidates</text>
+            <text x="780" y="80">Label fields</text>
+          </g>
+          <g stroke="currentColor" stroke-width="2" fill="none" marker-end="url(#arrow)">
+            <line id="edge-1" x1="130" y1="75" x2="170" y2="75"><title>to preprocess</title></line>
+            <line id="edge-2" x1="310" y1="75" x2="350" y2="75"><title>to OCR</title></line>
+            <line id="edge-3" x1="470" y1="75" x2="510" y2="75"><title>to match</title></line>
+            <line id="edge-4" x1="650" y1="75" x2="690" y2="75"><title>after user confirm</title></line>
+          </g>
+        </svg>
+        <p class="text-sm">
+          Low-confidence or ambiguous matches are rejected instead of guessed.
+          FDA lookup runs only after the user confirms a candidate in the Streamlit UI.
+        </p>
+      </div>
+    </section>
+
+    <section class="card bg-base-100 shadow" id="methods">
+      <div class="card-body">
+        <h2 class="card-title">Research methods A–F</h2>
+        <div class="overflow-x-auto">
+          <table class="table table-zebra">
+            <thead>
+              <tr><th>ID</th><th>Pipeline</th><th>Module keys</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A</td><td>Original + Tesseract</td><td><code>A_original</code></td></tr>
+              <tr><td>B</td><td>Grayscale + Tesseract</td><td><code>B_grayscale</code></td></tr>
+              <tr><td>C</td><td>Blur + adaptive thresh + Tesseract</td><td><code>C_blur_adaptive</code></td></tr>
+              <tr><td>D</td><td>CLAHE + Otsu + Tesseract</td><td><code>D_clahe_otsu</code></td></tr>
+              <tr><td>E</td><td>Perspective + preprocess + Tesseract</td><td><code>E_perspective_clahe_otsu</code></td></tr>
+              <tr><td>F</td><td>Perspective + CLAHE + EasyOCR</td><td><code>F_perspective_clahe</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="card bg-base-100 shadow" id="next">
+      <div class="card-body space-y-2">
+        <h2 class="card-title">What you do next</h2>
+        <ol class="list-decimal ml-5 space-y-1">
+          <li><code>cd MedScan && source .venv/bin/activate && streamlit run app.py</code></li>
+          <li>Photograph packaging under the six labeled conditions into <code>dataset/images/</code></li>
+          <li>Fill <code>dataset/ground_truth.csv</code></li>
+          <li>Run <code>python evaluation.py</code> to write real metrics + graphs</li>
+        </ol>
+        <p class="text-sm opacity-80">
+          Deliberately left empty: experimental result numbers (no fabricated scores),
+          and personal prescription photos (gitignored by design).
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
